@@ -46,6 +46,7 @@ const EventList = () => {
 				<>
 					<h3 className="SelectTitle">Catégories</h3>
 					<Select
+						name="eventType" // Add a name
 						selection={Array.from(typeList)}
 						onChange={(value) => (value ? changeType(value) : changeType(null))}
 					/>

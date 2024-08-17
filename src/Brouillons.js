@@ -48,17 +48,12 @@ const Slider = () => {
 		};
 	}, [index, byDateDesc.length]);
 
-	// useLayoutEffect(() => {
-	// 	if (radioRefs.current[index]) {
-	// 		radioRefs.current[index].focus();
-	// 		console.log(`Focused button: ${byDateDesc[index].title}`);
-	// 	}
-	// }, [index]);
-	// useEffect(() => {
-	// 	if (radioRefs.current[index]) {
-	// 		radioRefs.current[index].focus();
-	// 	}
-	// }, [index]);
+	useEffect(() => {
+		// Assure que le bouton radio correspondant est focus après chaque changement
+		if (radioRefs.current[index]) {
+			radioRefs.current[index].focus();
+		}
+	}, [index]);
 
 	return (
 		<div className="SlideCardList" data-testid="slider">
@@ -69,7 +64,7 @@ const Slider = () => {
 						index === idx ? "display" : "hide"
 					}`}
 					data-testid="slide-card">
-					<img src={event.cover} alt="{event.title" />
+					<img src={event.cover} alt={event.title} />
 					<div className="SlideCard__descriptionContainer">
 						<div className="SlideCard__description">
 							<h3>{event.title}</h3>
@@ -79,6 +74,7 @@ const Slider = () => {
 					</div>
 				</div>
 			))}
+
 			{byDateDesc.length > 0 && (
 				<div className="SlideCard__paginationContainer">
 					<div className="SlideCard__pagination" role="radiogroup">
@@ -88,19 +84,12 @@ const Slider = () => {
 								key={event.id}
 								type="radio"
 								name="radio-button"
-								onChange={() => handleRadioChange(byDateDesc.indexOf(event))}
-								checked={index === byDateDesc.indexOf(event)}
+								onChange={() => handleRadioChange(idx)}
+								checked={index === idx}
 								aria-checked={index === idx}
-								// tabIndex={byDateDesc.indexOf(event) + 1} // Set tabIndex to a positive value
-								// tabIndex={idx}
-								aria-label={`Slide ${byDateDesc.indexOf(event) + 1}`}
+								// role="radio"
 								ref={(el) => {
 									radioRefs.current[idx] = el;
-									console.log(
-										`Button ${byDateDesc.indexOf(event) + 1} tabIndex: ${
-											byDateDesc.indexOf(event) + 1
-										}`
-									);
 								}}
 							/>
 						))}
@@ -112,3 +101,18 @@ const Slider = () => {
 };
 
 export default Slider;
+
+// Explications :
+// Boucle de génération des boutons radio : Les boutons radio sont générés dynamiquement dans une boucle .map(), ce qui garantit qu'ils sont tous correctement rendus et ordonnés dans le DOM.
+
+// Références (refs) pour les boutons radio : Chaque bouton radio a une référence (ref) associée qui est stockée dans radioRefs.current. Cela permet de contrôler le focus après chaque changement de carte.
+
+// Focus géré par useEffect : Après chaque changement de carte (après chaque mise à jour de index), l'effet useEffect assure que le bouton radio approprié reçoit le focus, ce qui devrait permettre une navigation fluide avec le clavier.
+
+// role="radiogroup" et role="radio" : Ces attributs ARIA améliorent l'accessibilité en structurant correctement le groupe de boutons radio.
+
+// Points de vérification :
+// Navigation par clavier : Assurez-vous que vous pouvez naviguer entre les boutons radio en utilisant la touche Tab.
+// Focus : Le focus devrait être automatiquement déplacé sur le bouton radio sélectionné après chaque changement de carte.
+// Temps de transition : Si vous souhaitez tester avec un temps de transition plus court (par exemple, 4 secondes), ajustez la valeur dans setTimeout() pour voir si cela affecte la navigation et le focus.
+// Avec ces ajustements, la navigation au clavier devrait être plus fiable, et vous pourrez tester son fonctionnement en jouant avec le composant dans le navigateur. Si cela ne fonctionne toujours pas, il pourrait être utile de déboguer avec des outils comme React DevTools pour vérifier l'état du composant et les références des éléments lors des mises à jour.
