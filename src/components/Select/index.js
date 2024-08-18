@@ -134,9 +134,9 @@ const Select = ({
 	const [value, setValue] = useState();
 	const [collapsed, setCollapsed] = useState(true);
 	const changeValue = (newValue) => {
-		onChange();
+		onChange(newValue);
 		setValue(newValue);
-		setCollapsed(newValue);
+		setCollapsed(true);
 	};
 	return (
 		<div
@@ -210,15 +210,6 @@ const Arrow = () => (
 	</svg>
 );
 
-// Select.propTypes = {
-//   	selection: PropTypes.arrayOf(PropTypes.string).isRequired,
-//   	onChange: PropTypes.func,
-//   	name: PropTypes.string,
-//   	titleEmpty: PropTypes.bool,
-//   	label: PropTypes.string,
-//   	type: PropTypes.string,
-//   };
-
 Select.propTypes = {
 	// selection: PropTypes.array.isRequired,
 	selection: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -234,13 +225,5 @@ Select.defaultProps = {
 	label: "",
 	type: "normal",
 };
-
-// Select.defaultProps = {
-//   onChange: () => null,
-//   titleEmpty: false,
-//   label: "",
-//   type: "normal",
-//   name: "select",
-// };
 
 export default Select;

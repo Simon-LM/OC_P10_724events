@@ -47,11 +47,13 @@ describe("When Events is created", () => {
 				<Events />
 			</DataProvider>
 		);
-		await screen.findByText("avril");
-	});
+		await screen.findAllByText("avril");
+	}); // Remplace findByText by findAllByText
 	describe("and an error occured", () => {
 		it("an error message is displayed", async () => {
-			api.loadData = jest.fn().mockRejectedValue();
+			api.loadData = jest
+				.fn()
+				.mockRejectedValue(new Error("Erreur de chargement"));
 			render(
 				<DataProvider>
 					<Events />
@@ -59,15 +61,16 @@ describe("When Events is created", () => {
 			);
 			expect(await screen.findByText("An error occured")).toBeInTheDocument();
 		});
-	});
+	}); // Add new Error in the mockRejectedValue
+
 	describe("and we select a category", () => {
-		it.only("an filtered list is displayed", async () => {
+		it("an filtered list is displayed", async () => {
 			api.loadData = jest.fn().mockReturnValue(data);
 			render(
 				<DataProvider>
 					<Events />
 				</DataProvider>
-			);
+			); // Deleted it.only
 			await screen.findByText("Forum #productCON");
 			fireEvent(
 				await screen.findByTestId("collapse-button-testid"),
