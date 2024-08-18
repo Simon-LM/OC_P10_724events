@@ -16,6 +16,7 @@ const Slider = () => {
 	);
 
 	const [index, setIndex] = useState(0);
+	const [focusedIndex, setFocusedIndex] = useState(null);
 	const timeoutRef = useRef(null);
 	const radioRefs = useRef([]);
 
@@ -37,6 +38,14 @@ const Slider = () => {
 		setIndex(idx);
 	};
 
+	const handleFocus = (idx) => {
+		setFocusedIndex(idx);
+	};
+
+	const handleBlur = () => {
+		setFocusedIndex(null);
+	};
+
 	useEffect(() => {
 		if (byDateDesc.length > 0) {
 			nextCard();
@@ -47,18 +56,6 @@ const Slider = () => {
 			}
 		};
 	}, [index, byDateDesc.length]);
-
-	// useLayoutEffect(() => {
-	// 	if (radioRefs.current[index]) {
-	// 		radioRefs.current[index].focus();
-	// 		console.log(`Focused button: ${byDateDesc[index].title}`);
-	// 	}
-	// }, [index]);
-	// useEffect(() => {
-	// 	if (radioRefs.current[index]) {
-	// 		radioRefs.current[index].focus();
-	// 	}
-	// }, [index]);
 
 	return (
 		<div className="SlideCardList" data-testid="slider">
@@ -81,26 +78,26 @@ const Slider = () => {
 			))}
 			{byDateDesc.length > 0 && (
 				<div className="SlideCard__paginationContainer">
-					<div className="SlideCard__pagination" role="radiogroup">
+					<div
+						className="SlideCard__pagination"
+						role="group"
+						aria-label="Slide controls">
 						{byDateDesc.map((event, idx) => (
-							<input
+							<button
+								className={`SlideCard__paginationButton ${
+									focusedIndex === idx ? "focusVisible" : ""
+								}`}
 								data-testid="slider__buttons"
 								key={event.id}
-								type="radio"
-								name="radio-button"
-								onChange={() => handleRadioChange(byDateDesc.indexOf(event))}
-								checked={index === byDateDesc.indexOf(event)}
-								aria-checked={index === idx}
-								// tabIndex={byDateDesc.indexOf(event) + 1} // Set tabIndex to a positive value
-								// tabIndex={idx}
-								aria-label={`Slide ${byDateDesc.indexOf(event) + 1}`}
+								type="button"
+								onClick={() => handleRadioChange(idx)}
+								onFocus={() => handleFocus(idx)}
+								onBlur={handleBlur}
+								aria-pressed={index === idx}
+								tabIndex={0}
+								aria-label={`Slide ${idx + 1}`}
 								ref={(el) => {
 									radioRefs.current[idx] = el;
-									console.log(
-										`Button ${byDateDesc.indexOf(event) + 1} tabIndex: ${
-											byDateDesc.indexOf(event) + 1
-										}`
-									);
 								}}
 							/>
 						))}

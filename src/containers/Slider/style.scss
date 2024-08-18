@@ -34,12 +34,12 @@
 			display: flex;
 			justify-content: center;
 			width: 100%;
-			input {
-				width: 16px;
-				height: 16px;
-				min-width: 0;
-				color: $primary;
-			}
+			// input {
+			// 	width: 16px;
+			// 	height: 16px;
+			// 	min-width: 0;
+			// 	color: $primary;
+			// }
 		}
 		&__description {
 			left: 0;
@@ -77,13 +77,59 @@
 				font-weight: bold;
 			}
 		}
-		&__pagination input[type="radio"]:focus-visible {
-			outline: 2px solid #4314ff; /* Example focus outline */
-			outline-offset: 2px;
+		// &__pagination input[type="radio"]:focus-visible {
+		// 	outline: 2px solid #4314ff; /* Example focus outline */
+		// 	outline-offset: 2px;
+		// }
+
+		&__pagination {
+			display: flex;
+			gap: 10px;
+		}
+		&__paginationButton {
+			width: 20px;
+			height: 20px;
+			border: 2px solid #ccc;
+			border-radius: 50%;
+			background-color: transparent;
+			cursor: pointer;
+			padding: 0;
+			transition: all 0.3s ease;
+			outline: none;
+			background-color: #fff;
+		}
+		// &__paginationButton:focus-visible {
+		// 	// border: 3px solid white;
+		// 	outline: 4px solid rgba(0, 123, 255, 0.8);
+		// 	outline-offset: 2px;
+		// }
+
+		&__paginationButton:hover {
+			border-color: #007bff;
+		}
+		&__paginationButton[aria-pressed="true"] {
+			border-color: #007bff;
+			// background-color: #fff;
+			position: relative;
+		}
+		&__paginationButton[aria-pressed="true"]::after {
+			content: "";
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 10px;
+			height: 10px;
+			background-color: #007bff;
+			border-radius: 50%;
 		}
 	}
 }
-
+.focusVisible:focus-visible {
+	// border: 3px solid white;
+	outline: 4px solid rgba(0, 123, 255, 0.8);
+	outline-offset: 2px;
+}
 @keyframes slide {
 	0% {
 		transform: translateX(100%);

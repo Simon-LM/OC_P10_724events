@@ -142,17 +142,17 @@ const Page = () => {
 					<address>45 avenue de la République, 75000 Paris</address>
 					<div>01 23 45 67 89</div>
 					<div>contact@724events.com</div>
-					<div>
-						<a href="#twitch">
+					<div className="icons">
+						<a href="#twitch" className="icon">
 							<Icon name="twitch" />
 						</a>
-						<a href="#facebook">
+						<a href="#facebook" className="icon">
 							<Icon name="facebook" />
 						</a>
-						<a href="#twitter">
+						<a href="#twitter" className="icon">
 							<Icon name="twitter" />
 						</a>
-						<a href="#youtube">
+						<a href="#youtube" className="icon">
 							<Icon name="youtube" />
 						</a>
 					</div>
