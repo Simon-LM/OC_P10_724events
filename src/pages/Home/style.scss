@@ -3,11 +3,14 @@
 @import "src/colors.scss";
 
 *:focus-visible {
-	border: 3px solid black;
-	outline: 4px solid rgba(0, 123, 255, 0.8);
+	// border: 3px solid black;
+	outline: 4px solid #007bff;
 	outline-offset: 1px;
 }
 
+a:hover {
+	opacity: 0.85;
+}
 main {
 	display: flex;
 	flex-direction: column;

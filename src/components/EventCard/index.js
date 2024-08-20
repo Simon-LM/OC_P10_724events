@@ -14,8 +14,10 @@ const EventCard = ({
 	small = false,
 	...props
 }) => (
-	<div
+	<button
+		type="button"
 		data-testid="card-testid"
+		aria-label="Event Card"
 		className={`EventCard${small ? " EventCard--small" : ""}`}
 		{...props}>
 		<div className="EventCard__imageContainer">
@@ -26,7 +28,7 @@ const EventCard = ({
 			<div className="EventCard__title">{title}</div>
 			<div className="EventCard__month">{getMonth(date)}</div>
 		</div>
-	</div>
+	</button>
 );
 
 EventCard.propTypes = {

@@ -1,113 +1,290 @@
 /** @format */
 
-import { fireEvent, render, screen } from "@testing-library/react";
-import { api, DataProvider } from "../../contexts/DataContext";
-import Events from "./index";
+// const Field = ({
+// 	type = FIELD_TYPES.INPUT_TEXT, // Default type
+// 	label,
+// 	name,
+// 	placeholder,
+// 	...rest // Spread operator to capture other props like "type" and "required"
+// }) => {
+// 	let component;
+// 	switch (type) {
+// 		case FIELD_TYPES.TEXTAREA:
+// 			component = (
+// 				<textarea
+// 					name={name}
+// 					placeholder={placeholder}
+// 					data-testid="field-testid"
+// 					{...rest} // Spread props to include "required", "rows", etc.
+// 				/>
+// 			);
+// 			break;
+// 		default:
+// 			// The default case now handles all input types
+// 			component = (
+// 				<input
+// 					type={type} // This will now correctly use the type passed via rest (e.g., "email")
+// 					name={name}
+// 					placeholder={placeholder}
+// 					data-testid="field-testid"
+// 					{...rest} // Spread props to include "required", "maxlength", etc.
+// 				/>
+// 			);
+// 	}
+// 	return (
+// 		<div className="inputField">
+// 			<span>{label}</span>
+// 			{component}
+// 		</div>
+// 	);
+// };
 
-const data = {
-	events: [
-		{
-			id: 1,
-			type: "soirée entreprise",
-			date: "2022-04-29T20:28:45.744Z",
-			title: "Conférence #productCON",
-			cover: "/images/stem-list-EVgsAbL51Rk-unsplash.png",
-			description:
-				"Présentation des outils analytics aux professionnels du secteur",
-			nb_guesses: 1300,
-			periode: "24-25-26 Février",
-			prestations: [
-				"1 espace d’exposition",
-				"1 scéne principale",
-				"2 espaces de restaurations",
-				"1 site web dédié",
-			],
-		},
+// // // // // // // // // // // // // // // // // // // // // // // // //
 
-		{
-			id: 2,
-			type: "forum",
-			date: "2022-04-29T20:28:45.744Z",
-			title: "Forum #productCON",
-			cover: "/images/stem-list-EVgsAbL51Rk-unsplash.png",
-			description:
-				"Présentation des outils analytics aux professionnels du secteur",
-			nb_guesses: 1300,
-			periode: "24-25-26 Février",
-			prestations: ["1 espace d’exposition", "1 scéne principale"],
-		},
-	],
-};
+// import { useState, useCallback } from "react";
+// import PropTypes from "prop-types";
+// import Field from "./Field"; // Assuming you have a Field component
+// import Select from "./Select"; // Assuming you have a Select component
+// import Button, { BUTTON_TYPES } from "./Button"; // Assuming you have a Button component
 
-describe("When Events is created", () => {
-	it("a list of event card is displayed", async () => {
-		api.loadData = jest.fn().mockReturnValue(data);
-		render(
-			<DataProvider>
-				<Events />
-			</DataProvider>
-		);
-		await screen.findByText("avril");
-	});
-	describe("and an error occured", () => {
-		it("an error message is displayed", async () => {
-			api.loadData = jest.fn().mockRejectedValue();
-			render(
-				<DataProvider>
-					<Events />
-				</DataProvider>
-			);
-			expect(await screen.findByText("An error occured")).toBeInTheDocument();
-		});
-	});
-	describe("and we select a category", () => {
-		it.only("an filtered list is displayed", async () => {
-			api.loadData = jest.fn().mockReturnValue(data);
-			render(
-				<DataProvider>
-					<Events />
-				</DataProvider>
-			);
-			await screen.findByText("Forum #productCON");
-			fireEvent(
-				await screen.findByTestId("collapse-button-testid"),
-				new MouseEvent("click", {
-					cancelable: true,
-					bubbles: true,
-				})
-			);
-			fireEvent(
-				(await screen.findAllByText("soirée entreprise"))[0],
-				new MouseEvent("click", {
-					cancelable: true,
-					bubbles: true,
-				})
-			);
+// const mockContactApi = () =>
+// 	new Promise((resolve) => {
+// 		setTimeout(resolve, 500);
+// 	});
 
-			await screen.findByText("Conférence #productCON");
-			expect(screen.queryByText("Forum #productCON")).not.toBeInTheDocument();
-		});
-	});
+// const Form = ({ onSuccess, onError }) => {
+// 	const [sending, setSending] = useState(false);
+// 	const [selectedType, setSelectedType] = useState(""); // New state for select
+// 	const [formError, setFormError] = useState(""); // State to handle form errors
 
-	describe("and we click on an event", () => {
-		it("the event detail is displayed", async () => {
-			api.loadData = jest.fn().mockReturnValue(data);
-			render(
-				<DataProvider>
-					<Events />
-				</DataProvider>
-			);
+// 	const sendContact = useCallback(
+// 		async (evt) => {
+// 			evt.preventDefault();
 
-			fireEvent(
-				await screen.findByText("Conférence #productCON"),
-				new MouseEvent("click", {
-					cancelable: true,
-					bubbles: true,
-				})
-			);
+// 			// Reset error state
+// 			setFormError("");
 
-			await screen.findByText("24-25-26 Février");
-			await screen.findByText("1 site web dédié");
-		});
-	});
-});
+// 			// Validation for select field
+// 			if (!selectedType) {
+// 				setFormError("Veuillez sélectionner une option.");
+// 				return;
+// 			}
+
+// 			setSending(true);
+// 			try {
+// 				await mockContactApi();
+// 				setSending(false);
+// 				onSuccess();
+// 			} catch (err) {
+// 				setSending(false);
+// 				onError(err);
+// 			}
+// 		},
+// 		[onSuccess, onError, selectedType] // Add selectedType to dependencies
+// 	);
+
+// 	return (
+// 		<form onSubmit={sendContact}>
+// 			<div className="row">
+// 				<div className="col">
+// 					<Field
+// 						placeholder="Votre nom"
+// 						label="Nom"
+// 						data-testid="name"
+// 						required
+// 					/>
+// 					<Field placeholder="Votre prénom" label="Prénom" />
+// 					<Select
+// 						name="typeSelection"
+// 						selection={["Personel", "Entreprise"]}
+// 						onChange={(e) => setSelectedType(e.target.value)} // Update state on change
+// 						label="Personel / Entreprise"
+// 						type="large"
+// 						titleEmpty
+// 					/>
+// 					{formError && (
+// 						<div style={{ color: "red", marginBottom: "10px" }}>
+// 							{formError}
+// 						</div>
+// 					)}
+// 					<Field
+// 						type="email"
+// 						placeholder="Votre email"
+// 						label="Email"
+// 						data-testid="email"
+// 						required
+// 					/>
+// 					<Button type={BUTTON_TYPES.SUBMIT} disabled={sending}>
+// 						{sending ? "En cours" : "Envoyer"}
+// 					</Button>
+// 				</div>
+// 				<div className="col">
+// 					<Field
+// 						placeholder="message"
+// 						label="Message"
+// 						data-testid="message"
+// 						type={FIELD_TYPES.TEXTAREA}
+// 						required
+// 					/>
+// 				</div>
+// 			</div>
+// 		</form>
+// 	);
+// };
+
+// Form.propTypes = {
+// 	onError: PropTypes.func,
+// 	onSuccess: PropTypes.func,
+// };
+
+// Form.defaultProps = {
+// 	onError: () => null,
+// 	onSuccess: () => null,
+// };
+
+// export default Form;
+
+// Composant Field
+
+// import PropTypes from "prop-types";
+// import "./style.scss";
+
+// export const FIELD_TYPES = {
+//     INPUT_TEXT: 1,
+//     TEXTAREA: 2,
+//     EMAIL: 3,
+// };
+
+// const Field = ({
+//     type = FIELD_TYPES.INPUT_TEXT,
+//     label,
+//     name,
+//     placeholder,
+//     id, // Add id to the destructured props
+//     ...rest
+// }) => {
+//     let component;
+
+//     switch (type) {
+//         case FIELD_TYPES.TEXTAREA:
+//             component = (
+//                 <textarea
+//                     name={name}
+//                     placeholder={placeholder}
+//                     data-testid="field-testid"
+//                     aria-labelledby={id} // Correct usage of aria-labelledby
+//                     {...rest}
+//                 />
+//             );
+//             break;
+//         case FIELD_TYPES.INPUT_TEXT:
+//         case FIELD_TYPES.EMAIL: // Add
+//         default:
+//             component = (
+//                 <input
+//                     type={type === FIELD_TYPES.EMAIL ? "email" : "text"} // Ensure correct type for input
+//                     name={name}
+//                     placeholder={placeholder}
+//                     data-testid="field-testid"
+//                     aria-labelledby={id} // Correct usage of aria-labelledby
+//                     {...rest}
+//                 />
+//             );
+//     }
+
+//     return (
+//         <div className="inputField">
+//             <span id={id}>{label}</span> {/* Ensure id matches aria-labelledby */}
+//             {component}
+//         </div>
+//     );
+// };
+
+// Field.propTypes = {
+//     type: PropTypes.oneOf(Object.values(FIELD_TYPES)),
+//     name: PropTypes.string,
+//     label: PropTypes.string,
+//     placeholder: PropTypes.string,
+//     id: PropTypes.string.isRequired, // Ensure id is required
+// };
+
+// Field.defaultProps = {
+//     label: "",
+//     placeholder: "",
+//     type: FIELD_TYPES.INPUT_TEXT,
+//     name: "field-name",
+// };
+
+// export default Field;
+
+// const Form = ({ onSuccess, onError }) => {
+//     const [sending, setSending] = useState(false);
+//     const sendContact = useCallback(
+//         async (evt) => {
+//             evt.preventDefault();
+//             setSending(true);
+//             try {
+//                 await mockContactApi();
+//                 setSending(false);
+//                 onSuccess();
+//             } catch (err) {
+//                 setSending(false);
+//                 onError(err);
+//             }
+//         },
+//         [onSuccess, onError]
+//     );
+
+//     return (
+//         <form onSubmit={sendContact}>
+//             <div className="row">
+//                 <div className="col">
+//                     <Field
+//                         id="name-field"
+//                         placeholder="Votre nom"
+//                         label="Nom"
+//                         data-testid="name"
+//                         required
+//                     />
+//                     <Field
+//                         id="prenom-field"
+//                         placeholder="Votre prénom"
+//                         label="Prénom"
+//                     />
+//                     <Select
+//                         name="typeSelection"
+//                         selection={["Personel", "Entreprise"]}
+//                         onChange={() => null}
+//                         label="Personel / Entreprise"
+//                         type="large"
+//                         required
+//                         titleEmpty
+//                     />
+//                     <Field
+//                         id="email-field"
+//                         type={FIELD_TYPES.EMAIL} // Correct usage of type for email
+//                         placeholder="Votre email"
+//                         label="Email"
+//                         data-testid="email"
+//                         required
+//                     />
+//                     <Button type={BUTTON_TYPES.SUBMIT} disabled={sending}>
+//                         {sending ? "En cours" : "Envoyer"}
+//                     </Button>
+//                 </div>
+//                 <div className="col">
+//                     <Field
+//                         id="message-field"
+//                         placeholder="message"
+//                         label="Message"
+//                         data-testid="message"
+//                         type={FIELD_TYPES.TEXTAREA}
+//                         required
+//                     />
+//                 </div>
+//             </div>
+//         </form>
+//     );
+// };
+
+// export default Form;
