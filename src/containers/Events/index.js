@@ -3,23 +3,17 @@
 import { useState } from "react";
 import EventCard from "../../components/EventCard";
 import Select from "../../components/Select";
-import { useData } from "../../contexts/DataContext";
 import Modal from "../Modal";
 import ModalEvent from "../ModalEvent";
-
+import useSortedEvents from "../../Hooks/UseSortedEvents/useSortedEvents";
 import "./style.css";
 
 const PER_PAGE = 9;
 
 const EventList = () => {
-	const { data, error } = useData();
+	const { sortedEvents, error } = useSortedEvents();
 	const [type, setType] = useState();
 	const [currentPage, setCurrentPage] = useState(1);
-
-	// Make sure the data is available before sorting.
-	const sortedEvents = (data?.events || []).sort(
-		(a, b) => new Date(b.date) - new Date(a.date)
-	);
 
 	// Filter events by selected type.
 	const filteredEvents = (
@@ -42,11 +36,11 @@ const EventList = () => {
 		setType(evtType);
 	};
 	const pageNumber = Math.floor((filteredEvents?.length || 0) / PER_PAGE) + 1;
-	const typeList = new Set(data?.events.map((event) => event.type));
+	const typeList = new Set(sortedEvents.map((event) => event.type));
 	return (
 		<>
 			{error && <div>An error occured</div>}
-			{data === null ? (
+			{sortedEvents.length === 0 ? (
 				"loading"
 			) : (
 				<>

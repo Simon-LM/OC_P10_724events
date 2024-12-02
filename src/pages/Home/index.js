@@ -12,28 +12,20 @@ import Logo from "../../components/Logo";
 import Icon from "../../components/Icon";
 import Form from "../../containers/Form";
 import Modal from "../../containers/Modal";
-import { useData } from "../../contexts/DataContext";
+import useSortedEvents from "../../Hooks/UseSortedEvents/useSortedEvents";
 
 const Page = () => {
-	// const { last } = useData();
-
-	const { data, error } = useData();
-
-	// Sort the events and get the latest one.
-	const sortedEvents = (data?.events || []).sort(
-		(a, b) => new Date(b.date) - new Date(a.date)
-	);
-	const last = sortedEvents[0];
-
-	// Dans le composant Page
+	const { sortedEvents, error } = useSortedEvents();
 
 	if (error) {
-		return <div>{`Une erreur s'est produite : {error.message}`}</div>;
+		return <div>{`Une erreur s'est produite : ${error.message}`}</div>;
 	}
 
-	if (!data) {
+	if (!sortedEvents.length) {
 		return <div>Chargement...</div>;
 	}
+
+	const last = sortedEvents[0];
 
 	return (
 		<>
@@ -114,7 +106,9 @@ const Page = () => {
 					</div>
 				</section>
 				<div className="FormContainer" id="contact">
-					<h2 className="Title">Contact</h2>
+					<h2 className="Title" data-testid="contact-heading">
+						Contact
+					</h2>
 					<Modal
 						Content={
 							<div className="ModalMessage--success">
@@ -126,7 +120,11 @@ const Page = () => {
 							</div>
 						}>
 						{({ setIsOpened }) => (
-							<Form onSuccess={() => setIsOpened(true)} onError={() => null} />
+							<Form
+								onSuccess={() => setIsOpened(true)}
+								onError={() => null}
+								data-testid="form-contact"
+							/>
 						)}
 					</Modal>
 				</div>

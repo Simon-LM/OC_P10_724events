@@ -1,269 +1,163 @@
 /** @format */
 
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import Home from "./index";
+import useSortedEvents from "../../Hooks/UseSortedEvents/useSortedEvents";
+
+// Mock du hook useSortedEvents
+jest.mock("../../Hooks/UseSortedEvents/useSortedEvents", () => ({
+	__esModule: true,
+	default: jest.fn(),
+}));
 
 describe("When Form is created", () => {
-	it("a list of fields card is displayed", async () => {
-		render(<Home />);
-		// await screen.findByText("Email");
-		// await screen.findByText("Nom");
-		// await screen.findByText("Prénom");
-		// await screen.findByText("Personel / Entreprise");
+	beforeEach(() => {
+		// Configuration par défaut du mock
+		useSortedEvents.mockReturnValue({
+			sortedEvents: [
+				{
+					id: 1,
+					title: "Last Event",
+					date: "2023-09-01T10:00:00Z",
+					type: "Type A",
+					cover: "cover1.jpg",
+				},
+			],
+			error: null,
+		});
 	});
 
-	describe("and a click is triggered on the submit button", () => {
-		it("the success message is displayed", async () => {
-			render(<Home />);
-			fireEvent(
-				await screen.findByText("Envoyer"),
-				new MouseEvent("click", {
-					cancelable: true,
-					bubbles: true,
-				})
-			);
-			await screen.findByText("En cours");
-			await screen.findByText("Message envoyé !");
-		});
+	it("a list of fields card is displayed", async () => {
+		render(<Home />);
+
+		await screen.findByText("Email");
+		await screen.findByText("Nom");
+		await screen.findByText("Prénom");
+		await screen.findByText("Personel / Entreprise");
 	});
 });
 
-// // // // // // // // // // // // // //
-// // // // // // // // // // // // //
+describe("When a page is created", () => {
+	it("a list of events is displayed", async () => {
+		useSortedEvents.mockReturnValue({
+			sortedEvents: [
+				{
+					id: 1,
+					title: "Event Test",
+					date: "2023-09-01T10:00:00Z",
+					type: "Type A",
+					cover: "cover1.jpg",
+				},
+			],
+			error: null,
+		});
 
-// describe("When a page is created", () => {
-// 	it("a list of events is displayed", () => {
-// 		// to implement
-// 	});
-// 	it("a list a people is displayed", () => {
-// 		// to implement
-// 	});
-// 	it("a footer is displayed", () => {
-// 		// to implement
-// 	});
-// 	it("an event card, with the last event, is displayed", () => {
-// 		// to implement
-// 	});
-// });
+		render(<Home />);
 
-// // // // // // // // // // // // // // // // // // // //
+		// Utiliser findByRole pour cibler spécifiquement le titre h2
+		const eventsTitle = await screen.findByRole("heading", {
+			name: "Nos réalisations",
+			level: 2,
+		});
+		expect(eventsTitle).toBeInTheDocument();
+	});
 
-// // // // // // // // // // // // // //
+	it("a list of people is displayed", async () => {
+		useSortedEvents.mockReturnValue({
+			sortedEvents: [
+				{
+					id: 1,
+					title: "Event Test",
+					date: "2023-09-01T10:00:00Z",
+					type: "Type A",
+					cover: "cover1.jpg",
+				},
+			],
+			error: null,
+		});
 
-// // // // // // // // // // // // // // // //
+		render(<Home />);
 
-// // // // // // // // // // // // //
-// import { fireEvent, render, screen, act } from "@testing-library/react";
-// import Home from "./index";
+		const peopleTitle = await screen.findByRole("heading", {
+			name: "Notre équipe",
+			level: 2,
+		});
+		expect(peopleTitle).toBeInTheDocument();
 
-// describe("When Form is created", () => {
-// 	it("a list of fields card is displayed", async () => {
-// 		await act(async () => {
-// 			render(<Home />);
-// 		});
-// 		// await screen.findByText("Email");
-// 		await screen.findByText("Nom");
-// 		await screen.findByText("Prénom");
-// 		await screen.findByText("Personel / Entreprise");
-// 	});
+		const samiraElement = await screen.findByText("Samira");
+		expect(samiraElement).toBeInTheDocument();
+	});
 
-// describe("and a click is triggered on the submit button", () => {
-// 	it("the success message is displayed", async () => {
-// 		await act(async () => {
-// 			render(<Home />);
-// 		});
-// 		await act(async () => {
-// 			fireEvent(
-// 				await screen.findByText("Envoyer"),
-// 				new MouseEvent("click", {
-// 					cancelable: true,
-// 					bubbles: true,
-// 				})
-// 			);
-// 		});
-// 		await screen.findByText("En cours");
-// 		await screen.findByText("Message envoyé !");
-// 	});
-// });
-// });
+	it("a footer is displayed", async () => {
+		useSortedEvents.mockReturnValue({
+			sortedEvents: [
+				{
+					id: 1,
+					title: "Event Test",
+					date: "2023-09-01T10:00:00Z",
+					type: "Type A",
+					cover: "cover1.jpg",
+				},
+			],
+			error: null,
+		});
 
-// describe("When a page is created", () => {
-// 	it("a list of events is displayed", () => {
-// 		// to implement
-// 	});
-// 	it("a list a people is displayed", () => {
-// 		// to implement
-// 	});
-// 	it("a footer is displayed", () => {
-// 		// to implement
-// 	});
-// 	it("an event card, with the last event, is displayed", () => {
-// 		// to implement
-// 	});
-// });
+		render(<Home />);
 
-// // // // // // // // // // // // // // // // //
-// // // // // // // // // // // // // // // // //
-// // // // // // // // // // // // // // //
+		const contactTitle = await screen.findByRole("heading", {
+			name: "Contactez-nous",
+			level: 3,
+		});
+		expect(contactTitle).toBeInTheDocument();
 
-// import { fireEvent, render, screen, act } from "@testing-library/react";
-// import Home from "./index";
+		const phoneNumber = await screen.findByText("01 23 45 67 89");
+		expect(phoneNumber).toBeInTheDocument();
+	});
 
-// describe("When Form is created", () => {
-// 	beforeEach(async () => {
-// 		await act(async () => {
-// 			render(<Home />);
-// 		});
-// 	});
+	it("an event card with the last event is displayed", async () => {
+		const lastEvent = {
+			id: 1,
+			title: "Last Event",
+			date: "2023-09-01T10:00:00Z",
+			type: "Type A",
+			cover: "cover1.jpg",
+		};
 
-// 	// it("a list of fields card displayed", async () => {
-// 	// 	screen.debug(); // This will print the rendered HTML to the console
-// 	// 	await screen.findByText("Email");
-// 	// 	await screen.findByText("Nom");
-// 	// 	await screen.findByText("Prénom");
-// 	// 	// await screen.findByText("Personnel / Entreprise");
-// 	// 	await screen.findByText(/Personnel. *Entreprise/i);
-// 	// });
+		useSortedEvents.mockReturnValue({
+			sortedEvents: [lastEvent],
+			error: null,
+		});
 
-// 	// it("a list of fields card displayed", async () => {
-// 	// 	screen.debug(); // This will print the rendered HTML to the console
+		render(<Home />);
 
-// 	// 	await screen.findByText("Email");
-// 	// 	await screen.findByText("Nom");
-// 	// 	await screen.findByText("Prénom");
+		const lastEventTitle = await screen.findByRole("heading", {
+			name: "Notre dernière prestation",
+			level: 3,
+		});
+		expect(lastEventTitle).toBeInTheDocument();
 
-// 	// 	// Use a custom function to find text that includes both "Personnel" and "Entreprise"
-// 	// 	// await screen.findAllByText((content, element) => {
-// 	// 	// 	const hasText = (text) => element.textContent.includes(text);
-// 	// 	// 	return hasText("Personnel") && hasText("Entreprise");
-// 	// 	// });
+		// Utiliser getAllByText et vérifier le premier élément
+		const eventTitles = await screen.findAllByText("Last Event");
+		expect(eventTitles[0]).toBeInTheDocument();
+	});
 
-// 	// 	// await screen.findByText((content, element) => {
-// 	// 	// 	console.log("Checking element:", element.textContent);
-// 	// 	// 	const hasText = (text) => element.textContent.includes(text);
-// 	// 	// 	return hasText("Personnel") && hasText("Entreprise");
-// 	// 	// });
+	it("displays loading state when no events", () => {
+		useSortedEvents.mockReturnValue({
+			sortedEvents: [],
+			error: null,
+		});
 
-// 	// 	const elements = await screen.findAllByRole("textbox");
-// 	// 	const personnelEntrepriseField = elements.find(
-// 	// 		(el) =>
-// 	// 			el.textContent.includes("Personnel") &&
-// 	// 			el.textContent.includes("Entreprise")
-// 	// 	);
-// 	// 	expect(personnelEntrepriseField).toBeTruthy();
-// 	// });
+		render(<Home />);
+		expect(screen.getByText("Chargement...")).toBeInTheDocument();
+	});
 
-// 	// it("a list of fields card displayed", async () => {
-// 	// 	screen.debug(); // This will print the rendered HTML to the console
+	it("displays error message when error occurs", () => {
+		useSortedEvents.mockReturnValue({
+			sortedEvents: [],
+			error: new Error("Test error"),
+		});
 
-// 	// 	await screen.findByText("Email");
-// 	// 	await screen.findByText("Nom");
-// 	// 	await screen.findByText("Prénom");
-
-// 	// 	// Look for the "Personnel / Entreprise" text in any element
-// 	// 	const personnelEntrepriseElement = await screen.findByText(
-// 	// 		(content, element) => {
-// 	// 			const hasText = (text) =>
-// 	// 				element.textContent.toLowerCase().includes(text.toLowerCase());
-// 	// 			return hasText("Personnel") && hasText("Entreprise");
-// 	// 		},
-// 	// 		{ exact: false }
-// 	// 	);
-
-// 	// 	expect(personnelEntrepriseElement).toBeTruthy();
-// 	// });
-
-// 	// it("a list of fields card displayed", async () => {
-// 	// 	screen.debug(); // This will print the rendered HTML to the console
-
-// 	// 	await screen.findByText("Email");
-// 	// 	await screen.findByText("Nom");
-// 	// 	await screen.findByText("Prénom");
-
-// 	// 	// Get all elements in the document
-// 	// 	const allElements = await screen.findAllByText(/.*/);
-
-// 	// 	// Look for any element containing both "Personnel" and "Entreprise"
-// 	// 	const personnelEntrepriseElement = allElements.find((element) => {
-// 	// 		const text = element.textContent.toLowerCase();
-// 	// 		return text.includes("personnel") && text.includes("entreprise");
-// 	// 	});
-
-// 	// 	expect(personnelEntrepriseElement).toBeTruthy();
-// 	// 	if (!personnelEntrepriseElement) {
-// 	// 		console.log(
-// 	// 			"All elements:",
-// 	// 			allElements.map((el) => el.textContent)
-// 	// 		);
-// 	// 	}
-// 	// });
-
-// 	describe("and a click is triggered on the submit button", () => {
-// 		it("the success message is displayed", async () => {
-// 			const submitButton = await screen.findByText("Envoyer");
-// 			await act(async () => {
-// 				fireEvent.click(submitButton); // Simplified event firing
-// 			});
-// 			await screen.findByText("En cours");
-// 			// await screen.findByText("Message envoyé !");
-// 			await screen.findByText("Message envoyé !", {}, { timeout: 5000 }); // Waits up to 5 seconds
-// 		});
-// 	});
-// });
-
-// describe("When a page is created", () => {
-// 	it("a list of events is displayed", () => {
-// 		// to implement
-// 	});
-// 	it("a list of people is displayed", () => {
-// 		// Corrected "a" to "of"
-// 		// to implement
-// 	});
-// 	it("a footer is displayed", () => {
-// 		// to implement
-// 	});
-// 	it("an event card, with the last event, is displayed", () => {
-// 		// to implement
-// 	});
-// });
-
-// // // // // // // // // // // // // // //
-
-// import { fireEvent, render, screen, act } from "@testing-library/react";
-// import Home from "./index";
-
-// describe("When Form is created", () => {
-// 	beforeEach(async () => {
-// 		await act(async () => {
-// 			render(<Home />);
-// 		});
-// 	});
-
-// 	describe("and a click is triggered on the submit button", () => {
-// 		it("the success message is displayed", async () => {
-// 			const submitButton = await screen.findByText("Envoyer");
-// 			await act(async () => {
-// 				fireEvent.click(submitButton); // Simplified event firing
-// 			});
-// 			await screen.findByText("En cours");
-// 			// await screen.findByText("Message envoyé !");
-// 			await screen.findByText("Message envoyé !", {}, { timeout: 5000 }); // Waits up to 5 seconds
-// 		});
-// 	});
-// });
-
-// describe("When a page is created", () => {
-// 	it("a list of events is displayed", () => {
-// 		// to implement
-// 	});
-// 	it("a list of people is displayed", () => {
-// 		// Corrected "a" to "of"
-// 		// to implement
-// 	});
-// 	it("a footer is displayed", () => {
-// 		// to implement
-// 	});
-// 	it("an event card, with the last event, is displayed", () => {
-// 		// to implement
-// 	});
-// });
+		render(<Home />);
+		expect(screen.getByText(/Une erreur s'est produite/)).toBeInTheDocument();
+	});
+});
