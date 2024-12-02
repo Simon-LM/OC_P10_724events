@@ -15,7 +15,26 @@ import Modal from "../../containers/Modal";
 import { useData } from "../../contexts/DataContext";
 
 const Page = () => {
-	const { last } = useData();
+	// const { last } = useData();
+
+	const { data, error } = useData();
+
+	// Sort the events and get the latest one.
+	const sortedEvents = (data?.events || []).sort(
+		(a, b) => new Date(b.date) - new Date(a.date)
+	);
+	const last = sortedEvents[0];
+
+	// Dans le composant Page
+
+	if (error) {
+		return <div>{`Une erreur s'est produite : {error.message}`}</div>;
+	}
+
+	if (!data) {
+		return <div>Chargement...</div>;
+	}
+
 	return (
 		<>
 			<header>

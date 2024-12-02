@@ -61,7 +61,7 @@ const Slider = () => {
 		<div className="SlideCardList" data-testid="slider">
 			{byDateDesc.map((event, idx) => (
 				<div
-					key={event.title || idx}
+					key={event.id || idx}
 					className={`SlideCard SlideCard--${
 						index === idx ? "display" : "hide"
 					}`}
@@ -88,7 +88,7 @@ const Slider = () => {
 									focusedIndex === idx ? "focusVisible" : ""
 								}`}
 								data-testid="slider__buttons"
-								key={event.id}
+								key={event.id || idx}
 								type="button"
 								onClick={() => handleRadioChange(idx)}
 								onFocus={() => handleFocus(idx)}

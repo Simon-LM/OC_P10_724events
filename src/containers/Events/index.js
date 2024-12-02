@@ -16,10 +16,16 @@ const EventList = () => {
 	const [type, setType] = useState();
 	const [currentPage, setCurrentPage] = useState(1);
 
+	// Make sure the data is available before sorting.
+	const sortedEvents = (data?.events || []).sort(
+		(a, b) => new Date(b.date) - new Date(a.date)
+	);
+
+	// Filter events by selected type.
 	const filteredEvents = (
 		(!type
-			? data?.events
-			: data?.events.filter((event) => event.type === type)) || []
+			? sortedEvents
+			: sortedEvents.filter((event) => event.type === type)) || []
 	) // Filter events by selected type
 		.filter((event, index) => {
 			if (
