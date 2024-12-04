@@ -12,6 +12,7 @@ import Logo from "../../components/Logo";
 import Icon from "../../components/Icon";
 import Form from "../../containers/Form";
 import Modal from "../../containers/Modal";
+import ModalEvent from "../../containers/ModalEvent";
 import useSortedEvents from "../../Hooks/UseSortedEvents/useSortedEvents";
 
 const Page = () => {
@@ -133,12 +134,17 @@ const Page = () => {
 				<div className="col presta">
 					<h3>Notre dernière prestation</h3>
 					{last ? (
-						<EventCard
-							imageSrc={last.cover}
-							title={last.title}
-							date={new Date(last.date)}
-							label="boom"
-						/>
+						<Modal Content={<ModalEvent event={last} />}>
+							{({ setIsOpened }) => (
+								<EventCard
+									onClick={() => setIsOpened(true)}
+									imageSrc={last.cover}
+									title={last.title}
+									date={new Date(last.date)}
+									label="boom"
+								/>
+							)}
+						</Modal>
 					) : (
 						<p>Aucune prestation disponible</p>
 					)}
